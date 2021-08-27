@@ -1,0 +1,117 @@
+# -*- coding: utf-8 -*-
+"""
+Ejercicio Nº 6: Implementar el TDA  Cola, con sus operaciones Abstractas en Representación secuencial y encadenada.
+"""
+import numpy as np
+
+class ColaSecuencial():
+    __items=None
+    __max=0
+    __pr=0
+    __ul=0
+    __cant=0
+    
+    def __init__(self, xmax):
+        self.__max=xmax
+        self.__pr=0
+        self.__ul=0
+        self.__cant=0
+        self.__items=np.empty(self.__max,dtype=int)
+        
+    def vacia(self):
+        return self.__cant == 0
+    
+    def insertar(self,x):
+        if(self.__cant < self.__max):
+            self.__items[self.__ul]=x
+            self.__ul=(self.__ul+1) % self.__max
+            self.__cant +=1
+            return x
+        else:
+            print("Cola llena")
+            
+    def suprimir(self):
+        x=0
+        if(self.vacia()):
+            print("Pila Vacia")            
+        else:
+            x = self.__items[self.__pr]
+            self.__pr= (self.__pr+1)%self.__max
+            self.__cant -=1
+            return x
+        
+    def mostrar(self):
+        j=0
+        if(~self.vacia()):
+            i=self.__pr
+            for j in range(self.__cant):
+                print(self.__items[i])
+                i=(i+1)%self.__max
+        else:
+            print('Vacia')
+            
+            
+   class Nodo():
+    __item=0
+    __sig=None
+    def __init__(self,xitem):
+        self.__item=xitem
+        self.__sig=None
+    def setSiguiente(self,siguiente):
+        if isinstance(siguiente, Nodo):
+            self.__sig=siguiente
+    def getSiguiente(self):
+        return self.__sig
+    def getItem(self):
+        return self.__item
+    
+    
+    
+    
+    # -*- coding: utf-8 -*-
+"""
+Ejercicio Nº 6: Implementar el TDA  Cola, con sus operaciones Abstractas en Representación secuencial y encadenada.
+"""
+
+from Nodo import Nodo
+
+class ColaEncadenada():
+    __ul=None
+    __pr=None
+    __cant=0
+    def __init__(self):
+        self.__ul=None
+        self.__pr=None
+    def vacia(self):
+        return self.__cant==0
+    def insertar(self,x):
+        nuevoNodo=Nodo(x)
+        nuevoNodo.setSiguiente(None)
+        if(self.__ul==None):
+            self.__pr=nuevoNodo
+            self.__ul=nuevoNodo
+        else:
+            self.__ul.setSiguiente(nuevoNodo)
+            self.__ul=nuevoNodo        
+        self.__cant+=1
+        return nuevoNodo.getItem()
+    
+    def suprimir(self):
+        if (self.vacia()):
+            print('Cola Vacia')
+        else:
+            aux=self.__pr 
+            self.__pr=aux.getSiguiente()
+            self.__cant -=1
+            if (self.__pr==None):
+                print('La cola quedo vacia')
+            return aux.getItem()
+    
+    def mostrar(self):
+        if (self.vacia()):
+            print('Cola Vacia')
+        else:
+            aux=self.__pr 
+            while(aux != None):
+                print(aux.getItem())
+                aux=aux.getSiguiente()
