@@ -1,0 +1,319 @@
+class Nodo():
+    __item=0
+    __sig=None
+    def __init__(self,xitem):
+        self.__item=xitem
+        self.__sig=None
+    def setSiguiente(self,siguiente):
+        if isinstance(siguiente, Nodo):
+            self.__sig=siguiente
+    def getSiguiente(self):
+        return self.__sig
+    def getItem(self):
+        return self.__item
+        
+class NodoG():
+    __tiempo=0
+    __esp=0
+    __sig=None
+    def __init__(self,t,e):
+        self.__tiempo=t
+        self.__esp=e
+        self.__sig=None
+    def setSiguiente(self,siguiente):
+        if isinstance(siguiente, NodoG):
+            self.__sig=siguiente
+    def getSiguiente(self):
+        return self.__sig
+    def getTiempo(self):
+        return self.__tiempo
+    def getEsp(self):
+        return self.__esp
+        
+  
+  # -*- coding: utf-8 -*-
+"""
+"""
+
+from Nodo import Nodo
+
+class ColaEncadenada():
+    __ul=None
+    __pr=None
+    __cant=0
+    def __init__(self):
+        self.__ul=None
+        self.__pr=None
+    def vacia(self):
+        return self.__cant==0
+    def insertar(self,x):
+        nuevoNodo=Nodo(x)
+        nuevoNodo.setSiguiente(None)
+        if(self.__ul==None):
+            self.__pr=nuevoNodo
+            self.__ul=nuevoNodo
+        else:
+            self.__ul.setSiguiente(nuevoNodo)
+            self.__ul=nuevoNodo        
+        self.__cant+=1
+        return nuevoNodo.getItem()
+    
+    def suprimir(self):
+        if (self.vacia()):
+            print('Cola Vacia')
+        else:
+            aux=self.__pr 
+            if(self.__cant != 1): 
+                self.__pr=self.__pr.getSiguiente()
+            else:
+                self.__pr=None
+            self.__cant -=1
+            if (self.__pr==None):
+                self.__ul=None
+                print('La cola quedo vacia')
+            return aux.getItem()
+    
+    def mostrar(self):
+        if (self.vacia()):
+            print('Cola Vacia')
+        else:
+            aux=self.__pr 
+            while(aux != None):
+                print(aux.getItem())
+                aux=aux.getSiguiente()
+                
+                
+ # -*- coding: utf-8 -*-
+"""
+"""
+
+from NodoG import NodoG
+
+class ColaEncadenadaG():
+    __ul=None
+    __pr=None
+    __cant=0
+    def __init__(self):
+        self.__ul=None
+        self.__pr=None
+    def vacia(self):
+        return self.__cant==0
+    def insertar(self,t,e):
+        nuevoNodo=NodoG(t,e)
+        nuevoNodo.setSiguiente(None)
+        if(self.__ul==None):
+            self.__pr=nuevoNodo
+            self.__ul=nuevoNodo
+        else:
+            self.__ul.setSiguiente(nuevoNodo)
+            self.__ul=nuevoNodo        
+        self.__cant+=1
+        return nuevoNodo.getTiempo()
+    
+    def suprimir(self):
+        if (self.vacia()):
+            print('Cola Vacia')
+        else:
+            aux=self.__pr 
+            if(self.__cant != 1): 
+                self.__pr=self.__pr.getSiguiente()
+            else:
+                self.__pr=None
+            self.__cant -=1
+            if (self.__pr==None):
+                self.__ul=None
+                print('La colaG quedo vacia')
+            return aux.getTiempo()
+        
+    def recuperarPr(self):
+        return self.__pr
+    
+    def mostrar(self):
+        if (self.vacia()):
+            print('Cola Vacia')
+        else:
+            aux=self.__pr 
+            while(aux != None):
+                print(aux.getTiempo())
+                aux=aux.getSiguiente()
+                
+                
+                
+ # -*- coding: utf-8 -*-
+"""
+EjercicioNº8:
+ Realice un programa  que simule el comportamiento de un hospital, donde los pacientes acuden a sacar turnos para los
+ consultorios externos en mesa de entradas  donde se toma la siguiente información: nombre, documento y especialidad 
+ (Ginecología, Clínica médica, Oftalmología, Pediatría)  con un tiempo promedio de atención de 2 minutos. Dependiendo 
+ de la especialidad se le indica el numero de  consultorio en que será atendido. El tiempo promedio de atención del médico es de 20’. 
+Considerando que la frecuencia de llegada de los pacientes al hospital es de 1 por minutos  aproximadamente; 
+que en cada especialidad se atiende un máximo de 10 pacientes y los turnos solamente se dan de 7 a 8 de la mañana.
+     Se pide   a) calcular el tiempo promedio de espera en la cola de turnos.
+                   b) tiempo promedio de espera de los pacientes en cada especialidad.
+                    c) cantidad de personas que no pudieron obtener turnos.
+Nota: considere el tiempo de simulación de 4 horas
+
+"""
+
+from ColaEncadenada import ColaEncadenada
+from ColaEncadenadaG import ColaEncadenadaG
+import random
+import numpy as np
+
+def cargarColaGen(): 
+    print('Se agrego cola general')
+    espNuevoPac=random.randint(1, 4)
+    ColaGen.insertar(reloj, espNuevoPac)
+
+def cargarColas(t,q): ##obtiene la esp del 1 de la cola gen, lo saca y lo agrega en la nueva cola segun esp
+    ##print('Se hizo un turno a las '+str(reloj))         
+    esp=ColaGen.recuperarPr().getEsp()
+    te=ColaGen.suprimir()
+    ##print ('Tiempo de turno: '+str(te))
+    t+=(reloj-te)
+    q+=1
+    if esp == 1:ColaGine.insertar(te)
+    if esp == 2:ColaClinMed.insertar(te)
+    if esp == 3:ColaOftal.insertar(te)
+    if esp == 4:ColaPed.insertar(te)
+    return (t,q)
+    
+def atiendeMedico(arre,cola):
+    print('****Atendio medico a las '+str(reloj))
+    if cola==1:
+        if ColaGine.vacia()==False:
+            if(arre[1]<=10):
+                arre[0]+=ColaGine.suprimir()
+                arre[1]+=1
+                return 20
+            else: 
+                print('Se atendieron todos los turnos de Ginecologia')
+                return -1
+        else: 
+            print('No hay pacientes para Ginecologia')
+            return 0
+    if cola==2:
+        if(ColaClinMed.vacia()==False):
+            if(arre[3]<10):
+                arre[2]+=ColaClinMed.suprimir()
+                arre[3]+=1
+                return 20
+            else: 
+                print('Se atendieron todos los turnos de Clinica')
+                return -1
+        else: 
+            print('No hay pacientes para Clinica')
+            return 0
+    if cola==3:
+        if ColaOftal.vacia()==False:
+            if(arre[6]<10):
+                arre[4]+=ColaOftal.suprimir()
+                arre[5]+=1
+                return 20
+            else: 
+                print('Se atendieron todos los turnos de Oftalmologia')
+                return -1
+        else: 
+            print('No hay pacientes para Oftalmologia')
+            return 0
+    if cola==4:
+        if ColaPed.vacia()==False:
+            if(arre[7]<10):
+                arre[6]+=ColaPed.suprimir()
+                arre[7]+=1
+                return 20
+            else: 
+                print('Se atendieron todos los turnos de Pediatria')
+                return -1
+        else: 
+            print('No hay pacientes para Pediatria')
+            return 0
+if __name__=='__main__':
+    ColaGine=ColaEncadenada()
+    ColaClinMed=ColaEncadenada()
+    ColaOftal=ColaEncadenada()
+    ColaPed=ColaEncadenada()
+    ColaGen=ColaEncadenadaG()
+    reloj=1
+    simulacion=240
+    tiempoMed=20
+    atendidos= np.array([0, 0, 0, 0, 0, 0, 0, 0])
+    tColaTurnos=0
+    turnosDados=0
+    sinTurno=0
+    c1Libre=c2Libre=c3Libre=c4Libre=0
+    
+    
+    
+    while(reloj <= simulacion):  ##llega paciente a la fila de turnos
+        randomPac=random.uniform(0, 2)
+        randomTur=random.uniform(0, 2)
+        
+        if(randomTur>=0 and randomTur<= 1/2): ##si hay turnos, recibe a un nuevo paciente y lo pone en la cola general
+            cargarColaGen() 
+        
+        if((randomTur>=0 and randomTur<= 1/2) and ColaGen.vacia()==False and reloj <= 60): 
+            (tColaTurnos,turnosDados)=cargarColas(tColaTurnos,turnosDados)
+        
+        if c1Libre==0:
+            c1Libre=atiendeMedico(atendidos,1)
+        else:
+            if c1Libre==-1:
+                c1Libre==0
+            else:
+                c1Libre-=1
+            
+            
+        if c2Libre==0:
+            c2Libre=atiendeMedico(atendidos,2)
+        else:
+            if c2Libre==-1:
+                c2Libre==0
+            else:
+                c2Libre-=1
+            
+        if c3Libre==0:
+            c3Libre=atiendeMedico(atendidos,3)
+        else:
+            if c3Libre==-1:
+                c3Libre==0
+            else:
+                c3Libre-=1
+            
+        if c4Libre==0:
+            c4Libre=atiendeMedico(atendidos,4)
+        else:
+            if c4Libre==-1:
+                c4Libre==0
+            else:
+                c4Libre-=1
+  
+        reloj+=1
+    print('FILAS: TURNOS')
+    ColaGen.mostrar()
+    print('\nGINE')
+    ColaGine.mostrar()
+    print('\nCLINICA')
+    ColaClinMed.mostrar()
+    print('\nOFTAL')
+    ColaOftal.mostrar()
+    print('\nPED')
+    ColaPed.mostrar()
+    
+    while ColaGen.vacia()==False:
+        ColaGen.suprimir()
+        sinTurno+=1
+    
+    print('Atendidos:')
+    print(atendidos)
+    print('\n *******RESULTADOS*********\n')
+    
+    print('El tiempo promedio de espera en la fila de turnos es de '+str(tColaTurnos/turnosDados)+' minutos\n')
+    print('El tiempo promedio de espera en Ginecologia es de ' + str(atendidos[0]/atendidos[1])+ ' minutos\n')
+    print('El tiempo promedio de espera en Clinica Medica es de ' + str(atendidos[2]/atendidos[3])+ ' minutos\n')
+    print('El tiempo promedio de espera en Oftalmologia es de ' + str(atendidos[4]/atendidos[5])+ ' minutos\n')
+    print('El tiempo promedio de espera en Pediatria es de ' + str(atendidos[6]/atendidos[7])+ ' minutos\n')
+    print('Quedaron ' + str(sinTurno)+ ' pacientes sin conseguir turno\n')
+  
+  
+  
