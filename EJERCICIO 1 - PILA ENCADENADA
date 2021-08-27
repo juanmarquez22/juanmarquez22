@@ -1,0 +1,42 @@
+class Nodo():
+    __item=0
+    __sig=None
+    def __init__(self,xitem):
+        self.__item=xitem
+        self.__sig=None
+    def setSiguiente(self,siguiente):
+        if isinstance(siguiente, Nodo):
+            self.__sig=siguiente
+    def getSiguiente(self):
+        return self.__sig
+    def getItem(self):
+        return self.__item
+        
+        
+        
+  from Nodo import Nodo
+
+class PilaEncadenada():
+    __tope=None
+    __cant=0
+    def __init__(self):
+        self.__tope=None
+    def vacia(self):
+        return self.__tope==None
+    def insertar(self,x):
+        nuevoNodo=Nodo(x)
+        nuevoNodo.setSiguiente(self.__tope)
+        self.__tope=nuevoNodo
+        self.__cant+=1
+        print("Se agrego "+ str(nuevoNodo.getItem()))
+        return nuevoNodo.getItem()
+    def suprimir(self):
+        if (self.vacia()):
+            print('Pila Vacia')
+            return None
+        else:
+            aux=self.__tope 
+            self.__tope=aux.getSiguiente()
+            self.__cant -=1
+            print('Se elimino a ' + str(aux.getItem()))
+            return aux.getItem()
